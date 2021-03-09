@@ -82,8 +82,8 @@ pcl::PointCloud<PointType>::Ptr cornerPointsLessSharp(new pcl::PointCloud<PointT
 pcl::PointCloud<PointType>::Ptr surfPointsFlat(new pcl::PointCloud<PointType>());
 pcl::PointCloud<PointType>::Ptr surfPointsLessFlat(new pcl::PointCloud<PointType>());
 
-pcl::PointCloud<PointType>::Ptr laserCloudCornerLast(new pcl::PointCloud<PointType>());
-pcl::PointCloud<PointType>::Ptr laserCloudSurfLast(new pcl::PointCloud<PointType>());
+pcl::PointCloud<PointType>::Ptr laserCloudCornerLast(new pcl::PointCloud<PointType>());//cornerPointsLessSharp
+pcl::PointCloud<PointType>::Ptr laserCloudSurfLast(new pcl::PointCloud<PointType>());//surfPointsLessFlat
 pcl::PointCloud<PointType>::Ptr laserCloudFullRes(new pcl::PointCloud<PointType>());
 
 int laserCloudCornerLastNum = 0;
@@ -295,6 +295,10 @@ int main(int argc, char **argv)
                     std::vector<float> pointSearchSqDis;
 
                     TicToc t_data;
+					/**
+                     * @brief 寻找两个到边缘点最近的点，构成点到直线距离的残差
+					 * 					分别按照线束从上到下的顺序，寻找一个满足要求的点，与从KD树中寻找到的点构成参差；
+                     */
                     // find correspondence for corner features
                     for (int i = 0; i < cornerPointsSharpNum; ++i)
                     {
@@ -382,7 +386,9 @@ int main(int argc, char **argv)
                             corner_correspondence++;
                         }
                     }
-
+                    /**
+                     * @brief 分别在从上到下两个方向上，寻找两个在KD树上下线束的两个点构成平面残差；
+                     */
                     // find correspondence for plane features
                     for (int i = 0; i < surfPointsFlatNum; ++i)
                     {
